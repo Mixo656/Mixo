@@ -1,0 +1,36 @@
+module ha_df(A, B, Sum, Carry);
+  input A, B;           // Declare inputs A and B
+  output Sum, Carry;    // Declare outputs Sum and Carry
+
+  // Logic for the half adder
+  assign Sum = A ^ B;    // XOR operation for Sum
+  assign Carry = A & B;  // AND operation for Carry
+endmodule
+
+
+module ha_test;
+  reg A, B;          // Declare inputs A and B as registers
+  wire Sum, Carry;   // Declare outputs Sum and Carry as wires
+
+  // Instantiate the half adder module
+  ha_def had (A, B, Sum, Carry);
+
+  // Testbench to simulate the half adder
+  initial begin
+    $dumpfile("ha.vcd");       // Specifies the output file for waveform
+    $dumpvars(0, ha_test);     // Dumps variables for the specified module
+
+    // Apply test cases
+    #0 A = 0; B = 0;           // Test case 1: A=0, B=0
+    #1 A = 0; B = 1;           // Test case 2: A=0, B=1
+    #1 A = 1; B = 0;           // Test case 3: A=1, B=0
+    #1 A = 1; B = 1;           // Test case 4: A=1, B=1
+    #1 $finish;                // End the simulation
+  end
+endmodule
+
+// Example of a Half Adder module (ha_def)
+module ha_def(input A, input B, output Sum, output Carry);
+  assign Sum = A ^ B;          // XOR operation for Sum
+  assign Carry = A & B;        // AND operation for Carry
+endmodule

@@ -1,0 +1,43 @@
+module ha_st (
+    input wire A, 
+    input wire B,
+    output wire Sum,
+    output wire Carry
+);
+
+    // XOR gate for Sum
+    xor g1(Sum, A, B);
+
+    // AND gate for Carry
+    and g2(Carry, A, B);
+
+endmodule
+
+
+
+module ha_test;
+  reg A, B;           // Declare A and B as reg type for stimulus
+  wire Sum, Carry;    // Declare Sum and Carry as wire type for connection
+
+  // Instantiate the half adder module (assuming it's named 'ha')
+  ha ha1(A, B, Sum, Carry);
+
+  // Testbench to simulate the half adder
+  initial begin
+    $dumpfile("ha.vcd");    // Specifies the output file for waveform
+    $dumpvars(0, ha_test);  // Dumps variables for the specified module
+
+    // Apply test cases
+    #0 A = 0; B = 0;
+    #1 A = 0; B = 1;
+    #1 A = 1; B = 0;
+    #1 A = 1; B = 1;
+    #1 $finish;           // Ends the simulation
+  end
+endmodule
+
+// Half Adder module definition (for completeness, in case you need it)
+module ha(input A, input B, output Sum, output Carry);
+  assign Sum = A ^ B;      // XOR operation for sum
+  assign Carry = A & B;    // AND operation for carry
+endmodule

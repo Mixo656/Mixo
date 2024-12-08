@@ -1,0 +1,34 @@
+module fs_bah (diff, borr, a, b, c);
+  input a, b, c;            // Declare inputs a, b, and c (borrow-in)
+  output reg diff, borr;    // Declare outputs diff (difference) and borr (borrow)
+
+  always @(a or b or c) begin
+    diff = a ^ b ^ c;        // XOR operation for difference
+    borr = (~a & b) | (~a & c) | (b & c);  // Borrow calculation
+  end
+endmodule
+
+
+module test_fs_bah;
+  reg a, b, c;             // Declare inputs a, b, and c as registers
+  wire diff, borr;         // Declare outputs diff and borr as wires
+
+  // Instantiate the full subtractor module
+  fs_bah uut (diff, borr, a, b, c);
+
+  initial begin
+    $dumpfile("fs_bah.vcd");   // Specifies the output file for waveform
+    $dumpvars(0, test_fs_bah); // Dumps variables for the specified module
+
+    // Apply test cases
+    #0 a = 0; b = 0; c = 0;    // Test case 1: a=0, b=0, c=0
+    #1 a = 0; b = 0; c = 1;    // Test case 2: a=0, b=0, c=1
+    #1 a = 0; b = 1; c = 0;    // Test case 3: a=0, b=1, c=0
+    #1 a = 0; b = 1; c = 1;    // Test case 4: a=0, b=1, c=1
+    #1 a = 1; b = 0; c = 0;    // Test case 5: a=1, b=0, c=0
+    #1 a = 1; b = 0; c = 1;    // Test case 6: a=1, b=0, c=1
+    #1 a = 1; b = 1; c = 0;    // Test case 7: a=1, b=1, c=0
+    #1 a = 1; b = 1; c = 1;    // Test case 8: a=1, b=1, c=1
+    #1 $finish;                // End the simulation
+  end
+endmodule

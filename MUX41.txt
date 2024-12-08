@@ -1,0 +1,37 @@
+module mux_4_1 (I, S, Y);
+  input [3:0] I;   // 4-bit input vector (I0, I1, I2, I3)
+  input [1:0] S;   // 2-bit select signal (S1, S0)
+  output reg Y;    // Output Y as a register
+
+  always @ (S or I) begin
+    case (S)        // Select output based on S
+      2'b00: Y = I[0];  // If S = 00, output Y = I[0]
+      2'b01: Y = I[1];  // If S = 01, output Y = I[1]
+      2'b10: Y = I[2];  // If S = 10, output Y = I[2]
+      2'b11: Y = I[3];  // If S = 11, output Y = I[3]
+      default: Y = 0;   // Default case for invalid select signal (optional)
+    endcase
+  end
+endmodule
+
+
+module test_mux_4_1;
+  reg [3:0] I;  // Declare 4-bit input register I
+  reg [1:0] S;  // Declare 2-bit select register S
+  wire Y;       // Declare output wire Y
+
+  // Instantiate the 4-to-1 multiplexer
+  mux_4_1 uut (I, S, Y);
+
+  initial begin
+    $dumpfile("mux_4_1.vcd");  // Specify the output file for waveform
+    $dumpvars(0, test_mux_4_1); // Dump variables for the specified module
+
+    // Apply test cases
+    #0 I = 4'b0001; S = 2'b00;  // Test case 1: S=00, Y should be I[0] = 1
+    #1 I = 4'b1010; S = 2'b01;  // Test case 2: S=01, Y should be I[1] = 1
+    #1 I = 4'b1111; S = 2'b10;  // Test case 3: S=10, Y should be I[2] = 1
+    #1 I = 4'b1100; S = 2'b11;  // Test case 4: S=11, Y should be I[3] = 0
+    #1 $finish;                // End the simulation
+  end
+endmodule

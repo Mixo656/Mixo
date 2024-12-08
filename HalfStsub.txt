@@ -1,0 +1,42 @@
+module ha_st (A, B, Diff, Borr);
+  input A, B;             // Declare inputs A and B
+  output Diff, Borr;      // Declare outputs Diff and Borr
+  wire notA;              // Intermediate wire to hold the complement of A
+
+  // Logic for the half-subtractor
+  xor g1 (Diff, A, B);    // XOR gate for difference (Diff)
+  not g2 (notA, A);       // NOT gate for complement of A
+  and g3 (Borr, notA, B); // AND gate for borrow (Borr)
+endmodule
+
+
+module ha_test;
+  reg A, B;             // Declare inputs A and B as registers
+  wire Diff, Borr;      // Declare outputs Diff and Borr as wires
+
+  // Instantiate the half-subtractor module
+  ha_st ha1 (A, B, Diff, Borr);
+
+  initial begin
+    $dumpfile("ha.vcd");        // Specifies the output file for waveform
+    $dumpvars(0, ha_test);      // Dumps variables for the specified module
+
+    // Apply test cases
+    #0 A = 0; B = 0;            // Test case 1: A=0, B=0
+    #1 A = 0; B = 1;            // Test case 2: A=0, B=1
+    #1 A = 1; B = 0;            // Test case 3: A=1, B=0
+    #1 A = 1; B = 1;            // Test case 4: A=1, B=1
+    #1 $finish;                 // End the simulation
+  end
+endmodule
+
+// Example of a Half-Subtractor module (ha_st) for reference
+module ha_st (A, B, Diff, Borr);
+  input A, B;
+  output Diff, Borr;
+  wire notA;
+
+  xor g1 (Diff, A, B);          // XOR gate for Difference
+  not g2 (notA, A);             // NOT gate for complement of A
+  and g3 (Borr, notA, B);       // AND gate for Borrow
+endmodule
